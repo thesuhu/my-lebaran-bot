@@ -5,6 +5,8 @@ services:
     image: okteto.dev/bot-lebaran:latest
     build: .
     replicas: 1
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
     # ports:
     #   - 80
     resources:
