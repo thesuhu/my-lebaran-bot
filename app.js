@@ -16,7 +16,7 @@ bot.start((ctx) => {
 
 bot.command('kartu', async (ctx) => {
     try {
-        ctx.reply('Membuat kartu lebaran, mohon tunggu sejenak!')
+        ctx.reply('Membuat kartu lebaran, mohon tunggu sejenak. Proses ini membutuhkan waktu beberapa detik.')
         writelog.info('Membuat kartu lebaran')
         let imagePath = `./temp/${uuidV4()}.jpg`
         let chat = ctx.update.message.chat
