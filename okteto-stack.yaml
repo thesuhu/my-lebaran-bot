@@ -9,6 +9,6 @@ services:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
     # ports:
     #   - 80
-    resources:
-      cpu: 100m
-      memory: 128Mi
+    # resources:
+    #   cpu: 100m
+    #   memory: 128Mi
