@@ -19,9 +19,9 @@ bot.command('kartu', async (ctx) => {
         ctx.reply('Membuat kartu lebaran, mohon tunggu sejenak!')
         writelog.info('Membuat kartu lebaran')
         let imagePath = `./temp/${uuidV4()}.jpg`
-        let sender = ctx.update.message
-console.log(sender)        
-        await generateImage(imagePath)
+        let chat = ctx.update.message.chat
+        let sender = chat.first_name + ' ' + chat.last_name
+        await generateImage(imagePath, sender)
     	
     	writelog.info('Mengirim kartu lebaran')
         ctx.replyWithPhoto({ source: imagePath})

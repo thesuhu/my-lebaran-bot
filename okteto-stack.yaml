@@ -1,0 +1,12 @@
+name: bot-lebaran
+services:
+  bot-lebaran:
+    public: true
+    image: okteto.dev/bot-lebaran:latest
+    build: .
+    replicas: 1
+    # ports:
+    #   - 80
+    resources:
+      cpu: 100m
+      memory: 128Mi
