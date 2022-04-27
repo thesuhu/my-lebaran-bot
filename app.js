@@ -20,9 +20,18 @@ bot.command('kartu', async (ctx) => {
         writelog.info('Membuat kartu lebaran')
         let imagePath = `./temp/${uuidV4()}.jpg`
         let chat = ctx.update.message.chat
-        let sender = chat.first_name + ' ' + chat.last_name
-        await generateImage(imagePath, sender)
+        let text = ctx.update.message.text.slice(7)
+
+        //  cek apakah ada parameter pengirim
+        let sender = ''
+        if (text.length > 0) {
+            sender = text
+        } else {
+            sender = chat.first_name + ' ' + chat.last_name
+        }
     	
+        await generateImage(imagePath, sender)
+
     	writelog.info('Mengirim kartu lebaran')
         ctx.replyWithPhoto({ source: imagePath})
         
