@@ -19,21 +19,11 @@ jobs:
       uses: okteto/login@master
       with:
         token: ${{ secrets.OKTETO_TOKEN }}
-        
-    - name: Delete namespace
-      uses: okteto/delete-namespace@master
-      with:
-        namespace: mlb-thesuhu
-        
-    - name: Create namespace
-      uses: okteto/create-namespace@master
-      with:
-        namespace: mlb-thesuhu
-   
+           
     - name: Deploy application
       uses: okteto/deploy-stack@master
       env:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       with:
         build: "true"
-        namespace: mlb-thesuhu
+        namespace: lebaran-bot-thesuhu
