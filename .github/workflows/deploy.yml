@@ -23,15 +23,17 @@ jobs:
     - name: Delete namespace
       uses: okteto/delete-namespace@master
       with:
-        namespace: mlb-${{ github.event.number }}-thesuhu
+        namespace: mlb-thesuhu
         
     - name: Create namespace
       uses: okteto/create-namespace@master
       with:
-        namespace: mlb-${{ github.event.number }}-thesuhu
+        namespace: mlb-thesuhu
    
     - name: Deploy application
       uses: okteto/deploy-stack@master
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       with:
         build: "true"
-        namespace: mlb-${{ github.event.number }}-thesuhu
+        namespace: mlb-thesuhu
