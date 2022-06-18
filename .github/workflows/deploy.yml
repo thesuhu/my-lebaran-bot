@@ -1,0 +1,37 @@
+name: my-lebaran-bot
+
+on: 
+  pull_request:
+    branches:
+      - master
+      
+  schedule:
+    - cron: "0 11,23 * * *"
+      
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@master
+
+    - name: Login
+      uses: okteto/login@master
+      with:
+        token: ${{ secrets.OKTETO_TOKEN }}
+        
+    - name: Delete namespace
+      uses: okteto/delete-namespace@master
+      with:
+        namespace: mlb-${{ github.event.number }}-thesuhu
+        
+    - name: Create namespace
+      uses: okteto/create-namespace@master
+      with:
+        namespace: mlb-${{ github.event.number }}-thesuhu
+   
+    - name: Deploy application
+      uses: okteto/deploy-stack@master
+      with:
+        build: "true"
+        namespace: mlb-${{ github.event.number }}-thesuhu
