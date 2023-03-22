@@ -1,3 +1,4 @@
+const { TAHUN_HIJRIAH } = require('../config/keys')
 const kumpulanUcapan = [
     "Ada Jaka meminta izin, ingin meminang anak Bu Titin. Minal aidzin wal faidzin, mohon maaf lahir dan batin.",
     "Anak kucing baru lahir, diajarin emak bahasa latin. Ramadan suci berakhir, mohon maaf lahir batin.",
@@ -48,7 +49,7 @@ const kumpulanUcapan = [
     "Selamat Merayakan Hari Raya Idul Fitri. Semoga di hari yang fitri ini kita mampu kembali ke jatidiri insani menjadi pribadi-pribadi yang kepada siapapun, kapanpun dan dimanapun mampu menebar damai dan saling berbagi.",
     "Selambat apa pun jaringan internetku sehingga chat jadi pending terus, tetapi saya mewakili seluruh keluarga tetap berusaha untuk mengucapkan selamat Idulfitri, minal aidzin walfaizin, mohon maaf lahir dan batin.",
     "Sepatu baru ada, celana baru ada, pakaian baru ada, kopiah baru juga ada. Namun, yang belum kupunya yaitu maaf darimu. Selamat Idulfitri, mohon maaf lahir dan bathin.",
-    "Walau sesibuk apa pun operator dan pesanku pending terus menerus, saya mewakili seluruh keluarga tetap teguh untuk mengucapkan Selamat Hari Raya Idul Fitri 1442 H, minal aidin wal faizin.",
+    "Walau sesibuk apa pun operator dan pesanku pending terus menerus, saya mewakili seluruh keluarga tetap teguh untuk mengucapkan Selamat Hari Raya Idul Fitri " + TAHUN_HIJRIAH + " H, minal aidin wal faizin.",
     "Wangi kue Lebaran kucium di sana sini, kunikmati dan kumakan sesuka hati. Kadang malu juga sih, tapi inilah Idulfitri. Segala berkah harus kita nikmati.",
 ]
 

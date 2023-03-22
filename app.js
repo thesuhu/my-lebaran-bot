@@ -1,9 +1,9 @@
-require('dotenv').config()
 const { Telegraf } = require('telegraf')
 const { v4: uuidV4 } = require('uuid')
 const { generateImage, randomUcapan, deleteImage } = require('./src/generator')
 const writelog = require('@thesuhu/writelog')
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN)
+const { TELEGRAM_BOT_TOKEN } = require('./config/keys')
+const bot = new Telegraf(TELEGRAM_BOT_TOKEN)
 
 bot.start((ctx) => {
     let message = ` Gunakan perintah berikut untuk generator:
@@ -29,15 +29,15 @@ bot.command('kartu', async (ctx) => {
         } else {
             sender = chat.first_name + ' ' + chat.last_name
         }
-    	
+
         await generateImage(imagePath, sender)
 
-    	writelog.info('Mengirim kartu lebaran')
-        ctx.replyWithPhoto({ source: imagePath})
-        
-        writelog.info('Menghapus image temp (' + imagePath + ')')    	
-        await deleteImage(imagePath)
-        
+        writelog.info('Mengirim kartu lebaran')
+        await ctx.replyWithPhoto({ source: imagePath })
+
+        writelog.info('Menghapus image temp (' + imagePath + ')')
+        deleteImage(imagePath)
+
         writelog.info('Done!')
     } catch (err) {
         writelog.error(err.message)
@@ -47,7 +47,7 @@ bot.command('kartu', async (ctx) => {
 
 bot.command('ucapan', async (ctx) => {
     try {
-        let ucapan = await randomUcapan()
+        let ucapan = randomUcapan()
         ctx.reply(ucapan)
     } catch (err) {
         writelog.error(err.message)

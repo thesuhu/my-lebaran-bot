@@ -27,7 +27,7 @@ async function generateImage(imagePath, sender) {
 
         let imageTemp = await Jimp.read(imagePath)
 
-    	await imageTemp.resize(500, Jimp.AUTO);
+    	imageTemp.resize(500, Jimp.AUTO);
 
         let imageTempWidth = imageTemp.bitmap.width
         let imageTempHeight = imageTemp.bitmap.height
@@ -44,13 +44,13 @@ async function generateImage(imagePath, sender) {
         let text = `"${ucapan}"` 
         let text2 = `~ ${sender} ~`
 
-        await imageTemp.print(font, posX, posY - 20, {
+        imageTemp.print(font, posX, posY - 20, {
             text: text,
             alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
             alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
         }, maxWidth, maxHeight)
 
-        await imageTemp.print(font, posX, posY + (imageTempHeight / 10), {
+        imageTemp.print(font, posX, posY + (imageTempHeight / 10), {
             text: text2,
             alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
             alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
