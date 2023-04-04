@@ -31,9 +31,9 @@ async function generateImage(imagePath, sender) {
 
         let imageTempWidth = imageTemp.bitmap.width
         let imageTempHeight = imageTemp.bitmap.height
-        let imgDarkener = await new Jimp(imageTempWidth, imageTempHeight, '#000000')
-        imgDarkener = await imgDarkener.opacity(0.5)
-        imageTemp = await imageTemp.composite(imgDarkener, 0, 0);
+        let imgDarkener = new Jimp(imageTempWidth, imageTempHeight, '#000000')
+        imgDarkener = imgDarkener.opacity(0.5)
+        imageTemp = imageTemp.composite(imgDarkener, 0, 0);
 
         let posX = imageTempWidth / 15
         let posY = imageTempHeight / 15
