@@ -6,7 +6,7 @@ on:
       - master
       
   schedule:
-    - cron: "0 11,23 * * *"
+    - cron: "0 4,16 * * *"
       
 jobs:
   preview:
@@ -24,6 +24,7 @@ jobs:
       uses: okteto/deploy-stack@master
       env:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TAHUN_HIJRIAH: "1444"
       with:
         build: "true"
         namespace: lebaran-bot-thesuhu
