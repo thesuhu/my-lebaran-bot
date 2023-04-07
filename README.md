@@ -1,6 +1,6 @@
 # Lebaran Bot
 
-[![Build Status](https://img.shields.io/github/workflow/status/thesuhu/my-lebaran-bot/Build%20Status?label=Build%20Status)](https://github.com/thesuhu/my-lebaran-bot/actions/workflows/deploy.yml)
+![GitHub workflow](https://github.com/thesuhu/my-lebaran-bot/actions/workflows/deploy.yml/badge.svg) 
 
 Telegram bot tentang serba-serbi lebaran. Just for fun!.
 
