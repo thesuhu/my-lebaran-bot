@@ -27,4 +27,4 @@ jobs:
         TAHUN_HIJRIAH: "1444"
       with:
         build: "true"
-        namespace: lebaran-bot-thesuhu
+        namespace: thesuhu
