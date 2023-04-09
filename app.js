@@ -29,7 +29,7 @@ bot.command('kartu', async (ctx) => {
         let chat = ctx.update.message.chat
         let text = ctx.update.message.text.slice(7)
         //  cek apakah ada parameter pengirim
-        let sender = (text.length > 0) ? text : chat.first_name + ' ' + chat.last_name
+        let sender = (text.length > 0) ? text : (chat.first_name + ' ' + (chat.lastname == undefined ? '' : chat.lastname))
         // generate image
         await generateImage(imagePath, sender)
         // sending kartu lebaran
