@@ -6,24 +6,25 @@ on:
       - master
       
   schedule:
-    - cron: "0 11,23 * * *"
+    - cron: "0 4,16 * * *"
       
 jobs:
   preview:
     runs-on: ubuntu-latest
     steps:
     - name: checkout
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
 
-    - name: Login
-      uses: okteto/login@master
+    - name: Login to Okteto
+      uses: okteto/login@v1
       with:
         token: ${{ secrets.OKTETO_TOKEN }}
            
     - name: Deploy application
-      uses: okteto/deploy-stack@master
+      uses: okteto/deploy-stack@v1
       env:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TAHUN_HIJRIAH: "1444"
       with:
         build: "true"
-        namespace: lebaran-bot-thesuhu
+        namespace: telegram-bot-thesuhu
