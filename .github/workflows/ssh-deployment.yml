@@ -30,8 +30,11 @@ jobs:
       - name: Check and create .env file (if needed)
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/my-lebaran-bot && if [ ! -f .env ]; then echo 'TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}' >> .env && echo 'TAHUN_HIJRIAH=1445' >> .env; fi"
+      - name: Stop Node.js Process
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pkill node"
       - name: Pull
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/my-lebaran-bot && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && npm i && exit"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/my-lebaran-bot && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && npm i -g nodemon && npm run dev && exit"
       - name: Cleanup
         run: rm -rf ~/.ssh
