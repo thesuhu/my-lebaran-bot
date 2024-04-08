@@ -26,12 +26,12 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "if [ ! -d ${{ secrets.SSH_WORKDIR }} ]; then mkdir -p ${{ secrets.SSH_WORKDIR }}; fi"
       - name: Check and clone repo (if needed)
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }} && if [ ! -d ${{ env.REPO_NAME }} ]; then git clone git@github.com:thesuhu/${{ env.REPO_NAME }}.git; fi"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }} && if [ ! -d my-lebaran-bot ]; then git clone git@github.com:thesuhu/my-lebaran-bot.git; fi"
       - name: Check and create .env file (if needed)
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/${{ env.REPO_NAME }} && test -f .env || touch .env"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/my-lebaran-bot && test -f .env || touch .env"
       - name: Pull
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/${{ env.REPO_NAME }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/my-lebaran-bot && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit"
       - name: Cleanup
         run: rm -rf ~/.ssh
