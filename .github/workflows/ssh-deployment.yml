@@ -35,6 +35,6 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pkill -u ${{ secrets.SSH_USER }} node" || true
       - name: Pull
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/my-lebaran-bot && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && npm i nodemon && nohup npm run dev > /dev/null 2>&1 &" &
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/my-lebaran-bot && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && npm i nodemon && npm run dev &" &
       - name: Cleanup
         run: rm -rf ~/.ssh
