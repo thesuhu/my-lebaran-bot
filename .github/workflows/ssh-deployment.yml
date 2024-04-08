@@ -7,7 +7,7 @@ on:
 
 jobs:
   run_pull:
-    name: run pull
+    name: Run Pull
     runs-on: ubuntu-latest
 
     steps:
@@ -17,23 +17,21 @@ jobs:
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Check if SSH connection is successful
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "exit"
       - name: Check and create SSH_WORKDIR (if needed)
         run: |
-          if [ ! -d "${{ secrets.SSH_WORKDIR }}" ]; then
-            ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p ${{ secrets.SSH_WORKDIR }}"
-          fi
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "if [ ! -d ${{ secrets.SSH_WORKDIR }} ]; then mkdir -p ${{ secrets.SSH_WORKDIR }}; fi"
       - name: Check and clone repo (if needed)
         run: |
-          if [ ! -d "${{ secrets.SSH_WORKDIR }}/${{ env.REPO_NAME }}" ]; then
-            ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }} && git clone https://github.com/thesuhu/${{ env.REPO_NAME }}.git"
-          fi
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }} && if [ ! -d ${{ env.REPO_NAME }} ]; then git clone git@github.com:thesuhu/${{ env.REPO_NAME }}.git; fi"
       - name: Check and create .env file (if needed)
         run: |
-          if [ ! -f "${{ secrets.SSH_WORKDIR }}/${{ env.REPO_NAME }}/.env" ]; then
-            ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/${{ env.REPO_NAME }} && echo 'TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}' >> .env && echo 'TAHUN_HIJRIAH=${{ env.TAHUN_HIJRIAH }}' >> .env && echo '.env file created!'"
-          fi
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/${{ env.REPO_NAME }} && test -f .env || touch .env"
       - name: Pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/${{ env.REPO_NAME }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit"
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORKDIR }}/${{ env.REPO_NAME }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit"
       - name: Cleanup
         run: rm -rf ~/.ssh
