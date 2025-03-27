@@ -10,6 +10,9 @@ const jadwalsholat = require('./src/jadwalsholat')
 // Map untuk menyimpan timestamp terakhir dari setiap pengguna
 const userLastRequest = new Map();
 
+// Tambahkan map untuk melacak jumlah permintaan berturut-turut
+const userRequestCount = new Map();
+
 bot.start((ctx) => {
     let message = ` Gunakan perintah berikut untuk generator:
 
@@ -67,24 +70,68 @@ bot.command('kartu', async (ctx) => {
 
 bot.command('ucapan', async (ctx) => {
     try {
-        let ucapan = randomUcapan()
-        ctx.reply(ucapan)
+        const userId = ctx.from.id;
+
+        // Periksa apakah pengguna sudah mencapai batas permintaan
+        if (userRequestCount.has(userId)) {
+            const { count, lastRequestTime } = userRequestCount.get(userId);
+            const now = Date.now();
+            const timeDiff = (now - lastRequestTime) / 1000; // dalam detik
+
+            if (count >= 5 && timeDiff < 30) {
+                return ctx.reply(`Anda telah mencapai batas 5 permintaan berturut-turut. Silakan tunggu ${Math.ceil(30 - timeDiff)} detik sebelum mencoba lagi.`);
+            } else if (timeDiff >= 30) {
+                // Reset hitungan jika sudah melewati 30 detik
+                userRequestCount.set(userId, { count: 1, lastRequestTime: now });
+            } else {
+                // Tambah hitungan permintaan
+                userRequestCount.set(userId, { count: count + 1, lastRequestTime: now });
+            }
+        } else {
+            // Inisialisasi hitungan permintaan
+            userRequestCount.set(userId, { count: 1, lastRequestTime: Date.now() });
+        }
+
+        let ucapan = randomUcapan();
+        ctx.reply(ucapan);
     } catch (err) {
-        writelog.error(err.message)
-        ctx.reply('Maaf terjadi kesalahan.')
+        writelog.error(err.message);
+        ctx.reply('Maaf terjadi kesalahan.');
     }
 });
 
 bot.command('jadwal', async (ctx) => {
     try {
+        const userId = ctx.from.id;
+
+        // Periksa apakah pengguna sudah mencapai batas permintaan
+        if (userRequestCount.has(userId)) {
+            const { count, lastRequestTime } = userRequestCount.get(userId);
+            const now = Date.now();
+            const timeDiff = (now - lastRequestTime) / 1000; // dalam detik
+
+            if (count >= 5 && timeDiff < 30) {
+                return ctx.reply(`Anda telah mencapai batas 5 permintaan berturut-turut. Silakan tunggu ${Math.ceil(30 - timeDiff)} detik sebelum mencoba lagi.`);
+            } else if (timeDiff >= 30) {
+                // Reset hitungan jika sudah melewati 30 detik
+                userRequestCount.set(userId, { count: 1, lastRequestTime: now });
+            } else {
+                // Tambah hitungan permintaan
+                userRequestCount.set(userId, { count: count + 1, lastRequestTime: now });
+            }
+        } else {
+            // Inisialisasi hitungan permintaan
+            userRequestCount.set(userId, { count: 1, lastRequestTime: Date.now() });
+        }
+
         const message = ctx.message.text;
         const words = message.split(' ');
         const text = words.slice(1).join(' ');
         if (text === '') {
-            ctx.reply('Anda tidak menyebutkan nama lokasi.')
+            ctx.reply('Anda tidak menyebutkan nama lokasi.');
         } else {
-            let kota = fs.readFileSync('./src/json/kota.json')
-            let objKota = JSON.parse(kota)
+            let kota = fs.readFileSync('./src/json/kota.json');
+            let objKota = JSON.parse(kota);
             let exactMatch = null;
             // cari kota jika sama persis
             objKota.forEach((item) => {
@@ -92,31 +139,25 @@ bot.command('jadwal', async (ctx) => {
                     exactMatch = item;
                     return;
                 }
-            })
+            });
             // kota ketemu sama persis
             if (exactMatch !== null) {
-                // lanjut get jadwal sholat
-                let response = await jadwalsholat(exactMatch.lokasi, exactMatch.id)
-                // ctx.reply(response, { parse_mode: 'HTML' })
+                let response = await jadwalsholat(exactMatch.lokasi, exactMatch.id);
                 ctx.replyWithHTML(response, {
-                    disable_web_page_preview: true
-                })
+                    disable_web_page_preview: true,
+                });
             } else {
-                // tidak ketemu yang sama persis, cari yang mengandung kata
-                const filteredData = objKota.filter((item) => item.lokasi.toLowerCase().includes(text.trim().toLowerCase()));
+                const filteredData = objKota.filter((item) =>
+                    item.lokasi.toLowerCase().includes(text.trim().toLowerCase())
+                );
                 if (filteredData.length === 0) {
-                    // Jika tidak ada kota yang ditemukan
-                    ctx.reply("Maaf, tidak ada kota yang ditemukan");
+                    ctx.reply('Maaf, tidak ada kota yang ditemukan');
                 } else if (filteredData.length === 1) {
-                    // Jika hanya ada satu kota yang ditemukan
-                    // lanjut get jadwal sholat
-                    let response = await jadwalsholat(filteredData[0].lokasi, filteredData[0].id)
-                    // ctx.reply(response, { parse_mode: 'HTML' })
-                    ctx.replyWithHTML(response)
+                    let response = await jadwalsholat(filteredData[0].lokasi, filteredData[0].id);
+                    ctx.replyWithHTML(response);
                 } else {
-                    // Jika ada lebih dari satu kota yang ditemukan
                     const kota = filteredData.map((item) => item.lokasi);
-                    const kotaText = kota.join("\n");
+                    const kotaText = kota.join('\n');
                     ctx.reply(`Kota yang Anda cari kurang spesifik, silahkan pilih salah satu kota berikut:\n\n${kotaText}`);
                 }
             }
