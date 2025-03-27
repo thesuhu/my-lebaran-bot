@@ -7,6 +7,9 @@ const { TELEGRAM_BOT_TOKEN } = require('./config/keys')
 const bot = new Telegraf(TELEGRAM_BOT_TOKEN)
 const jadwalsholat = require('./src/jadwalsholat')
 
+// Map untuk menyimpan timestamp terakhir dari setiap pengguna
+const userLastRequest = new Map();
+
 bot.start((ctx) => {
     let message = ` Gunakan perintah berikut untuk generator:
 
@@ -20,28 +23,45 @@ Fitur tambahan:
     ctx.reply(message)
 })
 
-// bot.command('kartu', async (ctx) => {
 bot.command('kartu', async (ctx) => {
     try {
-        ctx.reply('⏳ Membuat kartu lebaran, mohon tunggu sejenak. Proses ini membutuhkan waktu beberapa detik.')
-        writelog.info('Membuat kartu lebaran')
-        let imagePath = `./temp/${uuidV4()}.jpg`
-        let chat = ctx.update.message.chat
-        let text = ctx.update.message.text.slice(7)
-        //  cek apakah ada parameter pengirim
-        let sender = (text.length > 0) ? text : (chat.first_name + ' ' + (chat.last_name == undefined ? '' : chat.last_name))
-        // generate image
-        await generateImage(imagePath, sender)
-        // sending kartu lebaran
-        writelog.info('Mengirim kartu lebaran')
-        await ctx.replyWithPhoto({ source: imagePath })
-        // hapus file temp
-        writelog.info('Menghapus image temp (' + imagePath + ')')
-        deleteImage(imagePath)
-        writelog.info('Done!')
+        const userId = ctx.from.id;
+
+        // Periksa apakah pengguna sudah membuat permintaan sebelumnya
+        if (userLastRequest.has(userId)) {
+            const lastRequestTime = userLastRequest.get(userId);
+            const now = Date.now();
+            const timeDiff = (now - lastRequestTime) / 1000; // dalam detik
+
+            if (timeDiff < 15) { // Ubah dari 10 ke 15 detik
+                return ctx.reply(`Tunggu ${Math.ceil(15 - timeDiff)} detik sebelum membuat kartu lagi.`);
+            }
+        }
+
+        ctx.reply('⏳ Membuat kartu lebaran, mohon tunggu sejenak. Proses ini membutuhkan waktu beberapa detik.');
+        writelog.info('Membuat kartu lebaran');
+        let imagePath = `./temp/${uuidV4()}.jpg`;
+        let chat = ctx.update.message.chat;
+        let text = ctx.update.message.text.slice(7);
+        let sender = (text.length > 0) ? text : (chat.first_name + ' ' + (chat.last_name == undefined ? '' : chat.last_name));
+
+        // Generate image
+        await generateImage(imagePath, sender);
+
+        // Kirim kartu lebaran
+        writelog.info('Mengirim kartu lebaran');
+        await ctx.replyWithPhoto({ source: imagePath });
+
+        // Reset timestamp pengguna setelah berhasil mengirim kartu
+        userLastRequest.set(userId, Date.now());
+
+        // Hapus file temp
+        writelog.info('Menghapus image temp (' + imagePath + ')');
+        deleteImage(imagePath);
+        writelog.info('Done!');
     } catch (err) {
-        writelog.error(err.message)
-        ctx.reply('Maaf terjadi kesalahan.')
+        writelog.error(err.message);
+        ctx.reply('Maaf terjadi kesalahan.');
     }
 });
 
@@ -78,7 +98,9 @@ bot.command('jadwal', async (ctx) => {
                 // lanjut get jadwal sholat
                 let response = await jadwalsholat(exactMatch.lokasi, exactMatch.id)
                 // ctx.reply(response, { parse_mode: 'HTML' })
-                ctx.replyWithHTML(response)
+                ctx.replyWithHTML(response, {
+                    disable_web_page_preview: true
+                })
             } else {
                 // tidak ketemu yang sama persis, cari yang mengandung kata
                 const filteredData = objKota.filter((item) => item.lokasi.toLowerCase().includes(text.trim().toLowerCase()));

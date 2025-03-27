@@ -1,6 +1,6 @@
 {
   "name": "lebaran-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Serba-serbi lebaran :)",
   "main": "app.js",
   "scripts": {

@@ -9,35 +9,36 @@ module.exports = async (kota, idkota, tanggal = new Date(moment().tz('Asia/Jakar
     let tgl = tanggal.getDate().toString().padStart(2, '0')
     // get data jadwal sholat
     const options = {
-        url: `https://api.myquran.com/v1/sholat/jadwal/${idkota}/${tahun}/${bulan}/${tgl}`,
+        url: `https://api.myquran.com/v2/sholat/jadwal/${idkota}/${tahun}/${bulan}/${tgl}`,
         method: 'GET'
     }
     try {
         const rsp = await axios(options);
-        let d = rsp.data.data
-        // console.log(rsp.data)
-        let randomNumber = Math.floor(Math.random() * 4) // Output bisa 1, 2, 3, atau 4 secara acak
-        // let arab = ayat[randomNumber].arab
-        // let latin = ayat[randomNumber].latin
-        let arti = ayat[randomNumber].arti
+        const { data } = rsp.data;
+        const { lokasi, daerah, jadwal } = data;
+
+        let randomNumber = Math.floor(Math.random() * 4); // Output bisa 1, 2, 3, atau 4 secara acak
+        let arti = ayat[randomNumber].arti;
+        // let ayatnya = ayat[randomNumber].arab;
+
         // membuat pesan jadwal sholat
-        jadwalSemua = `
-🌅 Imsak   = ${d.jadwal.imsak} WIB
-🌄 Subuh   = ${d.jadwal.subuh} WIB
-☀️ Terbit  = ${d.jadwal.terbit} WIB
-🌤️ Dhuha   = ${d.jadwal.dhuha} WIB
-🌞 Dzuhur  = ${d.jadwal.dzuhur} WIB
-🕒 Ashar   = ${d.jadwal.ashar} WIB
-🌇 Maghrib = ${d.jadwal.maghrib} WIB
-🌃 Isya    = ${d.jadwal.isya} WIB
-`
-        let koordinat = d.koordinat;
-        let googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${koordinat.lat},${koordinat.lon}`;
-        // final message
-        let message = `🕌 Jadwal sholat hari <b>${longDay(tanggal)}</b> tanggal <b>${formatDate(tanggal)}</b> untuk <a href="${googleMapsLink}">${d.lokasi}</a>, ${d.daerah} dan sekitarnya:        
+        const jadwalSemua = `
+🌅 Imsak   = ${jadwal.imsak} WIB
+🌄 Subuh   = ${jadwal.subuh} WIB
+☀️ Terbit  = ${jadwal.terbit} WIB
+🌤️ Dhuha   = ${jadwal.dhuha} WIB
+🌞 Dzuhur  = ${jadwal.dzuhur} WIB
+🕒 Ashar   = ${jadwal.ashar} WIB
+🌇 Maghrib = ${jadwal.maghrib} WIB
+🌃 Isya    = ${jadwal.isya} WIB
+`;
+
+        const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=masjid+di+${encodeURIComponent(kota)}`;
+        // final message 
+        const message = `🕌 Jadwal sholat hari <b>${longDay(tanggal)}</b> tanggal <b>${formatDate(tanggal)}</b> untuk <a href="${googleMapsLink}">${lokasi}</a>, ${daerah} dan sekitarnya:        
 <code>${jadwalSemua}</code>
 "${arti}"
-`
+`;
         return message;
     } catch (err) {
         writelog.error(err.message);

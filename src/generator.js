@@ -40,6 +40,7 @@ async function generateImage(imagePath, sender) {
         let maxWidth = imageTempWidth - (posX * 2)
         let maxHeight = imageTempHeight - posY
 
+        // let font = await Jimp.loadFont(Jimp.FONT_SANS_16_WHITE)
         let font = await Jimp.loadFont(Jimp.FONT_SANS_16_WHITE)
         let text = `"${ucapan}"` 
         let text2 = `~ ${sender} ~`
