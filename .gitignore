@@ -5,3 +5,4 @@ tests/
 
 .env
 .vscode
+request.log

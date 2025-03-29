@@ -1,6 +1,7 @@
 const { Telegraf, Markup, Extra } = require('telegraf')
 const { v4: uuidV4 } = require('uuid')
 const fs = require('fs')
+const path = require('path')
 const { generateImage, generateImageWithAI, randomUcapan, deleteImage, generateAIUcapan } = require('./src/generator')
 const writelog = require('@thesuhu/writelog')
 const { TELEGRAM_BOT_TOKEN, TAHUN_HIJRIAH } = require('./config/keys')
@@ -12,6 +13,19 @@ const userLastRequest = new Map();
 
 // Tambahkan map untuk melacak jumlah permintaan berturut-turut
 const userRequestCount = new Map();
+
+// Fungsi untuk mencatat log request
+function logRequest(path) {
+    const logFilePath = path.join(__dirname, 'requests.log');
+    const now = new Date();
+    const logEntry = `${now.toISOString()} ${path}\n`;
+
+    fs.appendFile(logFilePath, logEntry, (err) => {
+        if (err) {
+            writelog.error('Gagal mencatat log request: ' + err.message);
+        }
+    });
+}
 
 bot.start((ctx) => {
     let message = ` Gunakan perintah berikut untuk generator:
@@ -31,6 +45,9 @@ Fitur tambahan:
 bot.command('kartu', async (ctx) => {
     try {
         const userId = ctx.from.id;
+
+        // Log request
+        logRequest('/kartu');
 
         // Periksa apakah pengguna sudah membuat permintaan sebelumnya
         if (userLastRequest.has(userId)) {
@@ -74,6 +91,9 @@ bot.command('kartu', async (ctx) => {
 bot.command('kartuai', async (ctx) => {
     try {
         const userId = ctx.from.id;
+
+        // Log request
+        logRequest('/kartuai');
 
         // Periksa apakah pengguna sudah mencapai batas permintaan
         if (userRequestCount.has(userId)) {
@@ -130,6 +150,9 @@ bot.command('kartuai', async (ctx) => {
 
 bot.command('ucapan', async (ctx) => {
     try {
+        // Log request
+        logRequest('/ucapan');
+
         const userId = ctx.from.id;
 
         // Periksa apakah pengguna sudah mencapai batas permintaan
