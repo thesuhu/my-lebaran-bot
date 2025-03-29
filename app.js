@@ -185,6 +185,9 @@ bot.command('ucapan', async (ctx) => {
 
 bot.command('jadwal', async (ctx) => {
     try {
+        // Log request
+        logRequest('/jadwal');
+
         const userId = ctx.from.id;
 
         // Periksa apakah pengguna sudah mencapai batas permintaan
