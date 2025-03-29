@@ -6,3 +6,4 @@ tests/
 .env
 .vscode
 request.log
+src/images/.DS_Store
