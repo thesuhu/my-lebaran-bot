@@ -20,6 +20,7 @@ function logRequest(requestPath) {
     const now = new Date();
     const logEntry = `${now.toISOString()} ${requestPath}\n`;
 
+    // Tambahkan log ke file tanpa menimpa data sebelumnya
     fs.appendFile(logFilePath, logEntry, (err) => {
         if (err) {
             writelog.error('Gagal mencatat log request: ' + err.message);
