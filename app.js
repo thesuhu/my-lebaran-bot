@@ -16,7 +16,7 @@ const userRequestCount = new Map();
 
 // Fungsi untuk mencatat log request
 function logRequest(requestPath) {
-    const logFilePath = path.join(__dirname, 'request.log');
+    const logFilePath = path.join(__dirname, 'logs/request.log');
     const now = new Date();
     const logEntry = `${now.toISOString()} ${requestPath}\n`;
 

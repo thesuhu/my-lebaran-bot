@@ -36,6 +36,60 @@ Setelah itu jalankan bot dengan perintah:
 npm run dev
 ```
 
+### Deploy dengan Docker
+
+Jika Anda ingin menjalankan bot menggunakan Docker, ikuti langkah-langkah berikut:
+
+1. **Build Docker Image**  
+   Jalankan perintah berikut untuk membangun image Docker:
+
+   ```sh
+   docker build -t my-lebaran-bot .
+   ```
+
+2. **Jalankan Container**  
+   Gunakan perintah berikut untuk menjalankan container dengan mounting file dan direktori yang diperlukan:
+
+   ```sh
+   docker run -d \
+     --name lebaran-bot \
+     -v ~/bot/telegram/my-lebaran-bot/.env:/home/node/app/.env \
+     -v ~/bot/telegram/my-lebaran-bot/logs:/home/node/app/logs \
+     my-lebaran-bot
+   ```
+
+   Penjelasan:
+   - `-v ~/bot/telegram/my-lebaran-bot/.env:/home/node/app/.env`: Mount file `.env` dari host ke container.
+   - `-v ~/bot/telegram/my-lebaran-bot/logs:/home/node/app/logs`: Mount direktori `logs` dari host ke container.
+
+3. **Verifikasi Container**  
+   Gunakan perintah berikut untuk memastikan container berjalan:
+
+   ```sh
+   docker ps
+   ```
+
+4. **Melihat Log**  
+   Untuk melihat log dari container, gunakan perintah:
+
+   ```sh
+   docker logs lebaran-bot
+   ```
+
+5. **Menghentikan Container**  
+   Gunakan perintah berikut untuk menghentikan container:
+
+   ```sh
+   docker stop lebaran-bot
+   ```
+
+6. **Menghapus Container**  
+   Jika Anda ingin menghapus container:
+
+   ```sh
+   docker rm lebaran-bot
+   ```
+
 ## Privacy Policy
 
 Kami sangat menghargai privasi Anda. Berikut adalah beberapa hal yang perlu Anda ketahui:
