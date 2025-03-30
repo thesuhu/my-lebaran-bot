@@ -148,7 +148,7 @@ async function generateAIUcapan(prompt) {
             const ucapanAI = response.data.choices[0].text.trim();
 
             // Batasi hasil ke maksimal 200 huruf
-            return ucapanAI.length > 200 ? ucapanAI.substring(0, 200) + '...' : ucapanAI;
+            return ucapanAI.length > 250 ? ucapanAI.substring(0, 250) + '...' : ucapanAI;
         } catch (err) {
             writelog.error('Error generating AI ucapan with OpenAI: ' + err.message);
             return null; // Kembalikan null jika terjadi error

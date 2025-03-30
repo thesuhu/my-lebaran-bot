@@ -123,7 +123,7 @@ bot.command('kartuai', async (ctx) => {
         let sender = chat.first_name + ' ' + (chat.last_name == undefined ? '' : chat.last_name);
 
         // Dapatkan ucapan dari AI
-        const prompt = `Buat ucapan Idul Fitri ${TAHUN_HIJRIAH} yang singkat tapi lucu. Jangan gunakan tagar, jangan ada enter/ganti baris, jangan ada karakter "`; // Prompt untuk AI
+        const prompt = `Buat ucapan Idul Fitri ${TAHUN_HIJRIAH} yang singkat tapi lucu, maksimal 250 karakter jangan gunakan tagar, jangan ada enter/ganti baris, jangan ada karakter "`; // Prompt untuk AI
         const aiUcapan = await generateAIUcapan(prompt);
 
         // Periksa apakah ucapan dari AI valid
