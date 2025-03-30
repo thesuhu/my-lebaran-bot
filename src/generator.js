@@ -177,7 +177,8 @@ async function generateAIUcapan(prompt) {
             const ucapanAI = response.data.content[0].text.trim(); // Ambil teks dari response
 
             // Batasi hasil ke maksimal 200 huruf
-            return ucapanAI.length > 200 ? ucapanAI.substring(0, 200) + '...' : ucapanAI;
+            // return ucapanAI.length > 200 ? ucapanAI.substring(0, 200) + '...' : ucapanAI;
+            return ucapanAI
         } catch (err) {
             writelog.error('Error generating AI ucapan with Claude: ' + err.message);
             return null; // Kembalikan null jika terjadi error
